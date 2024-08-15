@@ -11,7 +11,7 @@ use crate::mutator::Mutator;
 /// is as defined in the `preconditions`. It has a list of `Effect`s that apply
 /// if the NPC successfully executed the task.
 #[derive(Reflect, Clone, Debug, PartialEq, Default)]
-pub struct Action {
+pub struct PlanAction {
     /// String like `eat_action`
     pub key: String,
     // TODO arguments coupled with Effects, maybe
@@ -23,7 +23,7 @@ pub struct Action {
     pub effects: Vec<Effect>,
 }
 
-impl Hash for Action {
+impl Hash for PlanAction {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.key.hash(state);
         self.preconditions.hash(state);
@@ -31,7 +31,7 @@ impl Hash for Action {
     }
 }
 
-impl Action {
+impl PlanAction {
     pub fn new(key: &str) -> Self {
         Self {
             key: key.to_string(),

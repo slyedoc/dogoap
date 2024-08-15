@@ -41,7 +41,7 @@ mod tests {
             .with_precondition("hunger", Compare::LessThanEquals(Datum::I64(50)))
             .with_precondition("energy", Compare::GreaterThanEquals(Datum::I64(50)));
 
-        let actions: Vec<Action> = vec![sleep_action, eat_action, rob_people];
+        let actions: Vec<PlanAction> = vec![sleep_action, eat_action, rob_people];
 
         let plan = make_plan_with_strategy(strategy, &start, &actions[..], &goal);
         let effects = get_effects_from_plan(plan.clone().unwrap().0);

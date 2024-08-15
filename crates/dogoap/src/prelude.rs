@@ -1,5 +1,5 @@
 // crate "dogoap" src/prelude.rs
-pub use crate::action::Action;
+pub use crate::action::PlanAction;
 pub use crate::compare::Compare;
 pub use crate::datum::Datum;
 pub use crate::effect::Effect;

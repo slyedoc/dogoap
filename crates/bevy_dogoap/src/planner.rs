@@ -16,7 +16,7 @@ use crate::prelude::*;
 use dogoap::prelude::*;
 
 // TODO can we replace this with ActionComponent perhaps? Should be able to
-type ActionsMap = HashMap<String, (Action, Box<dyn InserterComponent>)>;
+type ActionsMap = HashMap<String, (PlanAction, Box<dyn InserterComponent>)>;
 
 type DatumComponents = Vec<Box<dyn DatumComponent>>;
 
@@ -32,7 +32,7 @@ pub struct Planner {
     /// What [`Goal`] we're currently planning towards
     pub current_goal: Option<Goal>,
     /// What [`Action`] we're currrently trying to execute
-    pub current_action: Option<Action>,
+    pub current_action: Option<PlanAction>,
 
     // queue of action keys, first is current
     pub current_plan: VecDeque<String>,
@@ -54,7 +54,7 @@ pub struct Planner {
     pub plan_next_tick: bool,
 
     /// Internal prepared vector of just [`Action`]
-    actions_for_dogoap: Vec<Action>,
+    actions_for_dogoap: Vec<PlanAction>,
 }
 
 impl fmt::Debug for Planner {
@@ -85,7 +85,7 @@ pub struct IsPlanning;
 
 impl Planner {
     pub fn new(components: DatumComponents, goals: Vec<Goal>, actions_map: ActionsMap) -> Self {
-        let mut actions_for_dogoap: Vec<Action> = vec![];
+        let mut actions_for_dogoap: Vec<PlanAction> = vec![];
         // let mut actions_map: ActionsMap = HashMap::new();
 
         for (_key, (action, _component)) in actions_map.iter() {

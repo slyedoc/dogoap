@@ -21,13 +21,13 @@ fn test_basic_bool_setting() {
         cost: 1,
     };
 
-    let eat_action = Action {
+    let eat_action = PlanAction {
         key: "eat".to_string(),
         preconditions: vec![],
         effects: vec![eat_consequence],
     };
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(1, plan.len());
@@ -57,13 +57,13 @@ fn test_no_actions_needed() {
         cost: 1,
     };
 
-    let eat_action = Action {
+    let eat_action = PlanAction {
         key: "eat".to_string(),
         preconditions: vec![],
         effects: vec![eat_consequence],
     };
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let (plan, plan_cost) = make_plan(&start, &actions[..], &goal).unwrap();
     assert_eq!(1, plan.len());
@@ -84,7 +84,7 @@ fn test_simple_action() {
     let eat_action = simple_action("eat", "is_hungry", Datum::Bool(false));
     let eat_mutator = Mutator::Set("is_hungry".to_string(), Datum::Bool(false));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(1, plan.len());
@@ -114,7 +114,7 @@ fn test_two_bools() {
     let eat_action = simple_action("eat", "is_hungry", Datum::Bool(false));
     let sleep_action = simple_action("sleep", "is_tired", Datum::Bool(false));
 
-    let actions: Vec<Action> = vec![eat_action, sleep_action];
+    let actions: Vec<PlanAction> = vec![eat_action, sleep_action];
 
     let plan = make_plan(&start, &actions[..], &goal).unwrap();
 
@@ -178,7 +178,7 @@ fn test_four_bools() {
         ],
     );
 
-    let actions: Vec<Action> = vec![eat_action, sleep_action, train_action, shower_action];
+    let actions: Vec<PlanAction> = vec![eat_action, sleep_action, train_action, shower_action];
 
     let plan = make_plan(&start, &actions[..], &goal).unwrap();
 
@@ -238,7 +238,7 @@ fn test_enums() {
     let go_to_ramen_action = simple_action("go_to_ramen", "at_location", loc_ramen.clone())
         .with_precondition("at_location", Compare::Equals(loc_market.clone()));
 
-    let actions: Vec<Action> = vec![go_outside_action, go_to_market_action, go_to_ramen_action];
+    let actions: Vec<PlanAction> = vec![go_outside_action, go_to_market_action, go_to_ramen_action];
 
     let plan = make_plan(&start, &actions[..], &goal);
     let effects = get_effects_from_plan(plan.unwrap().0);
@@ -287,7 +287,7 @@ fn test_preconditions() {
 
     let sleep_action = simple_action("sleep", "is_tired", Datum::Bool(false));
 
-    let actions: Vec<Action> = vec![eat_action, sleep_action];
+    let actions: Vec<PlanAction> = vec![eat_action, sleep_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(3, plan.len());
@@ -322,7 +322,7 @@ fn test_int_increment() {
     let eat_action = simple_increment_action("eat", "energy", Datum::I64(10));
     let eat_mutator = Mutator::Increment("energy".to_string(), Datum::I64(10 as i64));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(5, plan.len());
@@ -346,7 +346,7 @@ fn test_int_decrement() {
     let eat_action = simple_decrement_action("eat", "hunger", Datum::I64(10 as i64));
     let eat_mutator = Mutator::Decrement("hunger".to_string(), Datum::I64(10 as i64));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(7, plan.len());
@@ -370,7 +370,7 @@ fn test_float_increment() {
     let eat_action = simple_increment_action("eat", "energy", Datum::F64(10.0));
     let eat_mutator = Mutator::Increment("energy".to_string(), Datum::F64(10.0));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
     assert_eq!(5, plan.len());
@@ -394,7 +394,7 @@ fn test_greater_than_equals() {
 
     let eat_action = simple_increment_action("eat", "energy", Datum::I64(6));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = make_plan(&start, &actions[..], &goal).unwrap();
     let effects = get_effects_from_plan(plan.0.clone());
@@ -445,7 +445,7 @@ fn test_long_plan() {
         .with_precondition("hunger", Compare::LessThanEquals(Datum::I64(50)))
         .with_precondition("energy", Compare::GreaterThanEquals(Datum::I64(50)));
 
-    let actions: Vec<Action> = vec![sleep_action, eat_action, rob_people];
+    let actions: Vec<PlanAction> = vec![sleep_action, eat_action, rob_people];
 
     let plan = get_effects_from_plan(make_plan(&start, &actions[..], &goal).unwrap().0);
 
@@ -466,7 +466,7 @@ fn test_reverse_strategy() {
     let eat_action = simple_action("eat", "is_hungry", Datum::Bool(false));
     let eat_mutator = Mutator::Set("is_hungry".to_string(), Datum::Bool(false));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = get_effects_from_plan(
         make_plan_with_strategy(PlanningStrategy::GoalToStart, &start, &actions[..], &goal)
@@ -496,11 +496,11 @@ fn test_prefer_lower_cost_plan() {
 
     let goal = Goal::new().with_req("gold", Compare::Equals(Datum::I64(10)));
 
-    let cheap_action = Action::new("cheap_action")
+    let cheap_action = PlanAction::new("cheap_action")
         .add_mutator(Mutator::Increment("gold".to_string(), Datum::I64(1)))
         .set_cost(1); // Cost/gold is lower than expensive_action
 
-    let expensive_action = Action::new("expensive_action")
+    let expensive_action = PlanAction::new("expensive_action")
         .add_mutator(Mutator::Increment("gold".to_string(), Datum::I64(3)))
         .set_cost(4); // Cost/gold is higher than cheap_action
 

@@ -1,4 +1,4 @@
-use crate::{action::Action, datum::Datum, localstate::LocalState};
+use crate::{action::PlanAction, datum::Datum, localstate::LocalState};
 use bevy_reflect::Reflect;
 use std::hash::{Hash, Hasher};
 
@@ -57,7 +57,7 @@ pub fn compare_values(comparison: &Compare, value: &Datum) -> bool {
 
 /// Checks all the preconditions from the `Action` against passed in `LocalState`
 /// Returns `true` if all the preconditions pass (or if there is none), otherwise `false`
-pub fn check_preconditions(state: &LocalState, action: &Action) -> bool {
+pub fn check_preconditions(state: &LocalState, action: &PlanAction) -> bool {
     action.preconditions.iter().all(|(key, value)| {
         let state_value = state
             .data
@@ -76,7 +76,7 @@ mod test {
     #[test]
     fn test_check_preconditions_empty() {
         let state = LocalState::default().with_datum("is_hungry", Datum::Bool(true));
-        let action = Action::default();
+        let action = PlanAction::default();
 
         let result = check_preconditions(&state, &action);
         assert_eq!(result, true);
@@ -86,7 +86,7 @@ mod test {
     fn test_check_preconditions_true() {
         let state = LocalState::default().with_datum("is_hungry", Datum::Bool(true));
         let action =
-            Action::default().with_precondition("is_hungry", Compare::Equals(Datum::Bool(true)));
+            PlanAction::default().with_precondition("is_hungry", Compare::Equals(Datum::Bool(true)));
 
         let result = check_preconditions(&state, &action);
         assert_eq!(result, true);
@@ -96,7 +96,7 @@ mod test {
     fn test_check_preconditions_false() {
         let state = LocalState::default().with_datum("is_hungry", Datum::Bool(true));
         let action =
-            Action::default().with_precondition("is_hungry", Compare::Equals(Datum::Bool(false)));
+            PlanAction::default().with_precondition("is_hungry", Compare::Equals(Datum::Bool(false)));
 
         let result = check_preconditions(&state, &action);
         assert_eq!(result, false);
@@ -107,7 +107,7 @@ mod test {
         let state = LocalState::default().with_datum("is_hungry", Datum::Bool(true));
 
         // False + True
-        let action = Action::default()
+        let action = PlanAction::default()
             .with_precondition("is_hungry", Compare::Equals(Datum::Bool(false)))
             .with_precondition("is_hungry", Compare::Equals(Datum::Bool(true)));
 
@@ -115,7 +115,7 @@ mod test {
         assert_eq!(result, false);
 
         // True + False
-        let action = Action::default()
+        let action = PlanAction::default()
             .with_precondition("is_hungry", Compare::Equals(Datum::Bool(true)))
             .with_precondition("is_hungry", Compare::Equals(Datum::Bool(false)));
 

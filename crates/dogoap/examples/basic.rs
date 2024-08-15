@@ -9,7 +9,7 @@ fn main() {
 
     let goal = Goal::new().with_req("is_hungry", Compare::Equals(Datum::Bool(false)));
 
-    let eat_action = Action {
+    let eat_action = PlanAction {
         key: "eat".to_string(),
         preconditions: vec![],
         effects: vec![Effect {
@@ -20,7 +20,7 @@ fn main() {
         }],
     };
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = make_plan(&start, &actions[..], &goal);
 

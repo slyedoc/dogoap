@@ -11,9 +11,9 @@ fn main() {
     // NOTE This is the "simple" part, where we create an action with just
     // two strings + a field
     let eat_action =
-        Action::new("eat").add_mutator(Mutator::Set("is_hungry".to_string(), Datum::Bool(false)));
+        PlanAction::new("eat").add_mutator(Mutator::Set("is_hungry".to_string(), Datum::Bool(false)));
 
-    let actions: Vec<Action> = vec![eat_action];
+    let actions: Vec<PlanAction> = vec![eat_action];
 
     let plan = make_plan(&start, &actions[..], &goal);
 

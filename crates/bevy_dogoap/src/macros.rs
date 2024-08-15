@@ -22,7 +22,7 @@ macro_rules! create_action_map {
     ($(($marker:ty, $action:expr)),* $(,)?) => {{
         use std::collections::HashMap;
         use bevy_dogoap::prelude::InserterComponent;
-        let map: HashMap<String, (Action, Box<dyn InserterComponent>)> = HashMap::from([
+        let map: HashMap<String, (PlanAction, Box<dyn InserterComponent>)> = HashMap::from([
             $(
                 (
                     <$marker>::key(),

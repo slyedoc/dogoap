@@ -18,8 +18,8 @@ pub fn action_component_derive(input: TokenStream) -> TokenStream {
             fn key() -> String {
                 #snake_case_name.to_owned()
             }
-            fn new() -> Action {
-                Action::new(#snake_case_name)
+            fn new() -> PlanAction {
+                PlanAction::new(#snake_case_name)
             }
             fn action_type_name(&self) -> &'static str {
                 stringify!(#name)

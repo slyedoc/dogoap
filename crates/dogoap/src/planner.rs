@@ -1,5 +1,5 @@
 use crate::{
-    action::Action,
+    action::PlanAction,
     compare::{check_preconditions, compare_values},
     effect::Effect,
     goal::Goal,
@@ -43,7 +43,7 @@ fn heuristic(node: &Node, goal: &Goal) -> usize {
 
 fn successors<'a>(
     node: &'a Node,
-    actions: &'a [Action],
+    actions: &'a [PlanAction],
 ) -> impl Iterator<Item = (Node, usize)> + 'a {
     let state = node.state();
     actions.iter().filter_map(move |action| {
@@ -83,7 +83,7 @@ fn is_goal(node: &Node, goal: &Goal) -> bool {
 pub fn make_plan_with_strategy(
     strategy: PlanningStrategy,
     start: &LocalState,
-    actions: &[Action],
+    actions: &[PlanAction],
     goal: &Goal,
 ) -> Option<(Vec<Node>, usize)> {
     match strategy {
@@ -119,7 +119,7 @@ pub enum PlanningStrategy {
 /// [`Goal`] state
 pub fn make_plan(
     start: &LocalState,
-    actions: &[Action],
+    actions: &[PlanAction],
     goal: &Goal,
 ) -> Option<(Vec<Node>, usize)> {
     // Default to using Start -> Goal planning

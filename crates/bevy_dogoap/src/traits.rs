@@ -2,7 +2,7 @@ use std::fmt;
 
 use bevy::prelude::{reflect_trait, Commands, Component, Entity};
 
-use dogoap::prelude::{Action, Compare, Datum, Mutator};
+use dogoap::prelude::{PlanAction, Compare, Datum, Mutator};
 
 /// A [`Component`] that can insert/remove itself to/from an Entity
 /// Used for adding/removing current [`Action`] our planner tells us to perform
@@ -93,7 +93,7 @@ pub trait ActionComponent: Send + Sync {
     where
         Self: Sized;
     /// Creates a new [`Action`] with our snake_case key
-    fn new() -> Action
+    fn new() -> PlanAction
     where
         Self: Sized;
     /// Returns the type name
