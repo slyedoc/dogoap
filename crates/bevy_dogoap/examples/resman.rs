@@ -33,7 +33,7 @@ Customer->Customer: DrinkLemonade
 
 use std::collections::{HashMap, VecDeque};
 
-use bevy::{color::palettes::css::*, prelude::*};
+use bevy::{color::palettes::css::*, prelude::*, sprite::Anchor};
 use bevy_dogoap::prelude::*;
 
 fn main() {
@@ -269,23 +269,18 @@ fn setup(mut commands: Commands) {
                 Customer::default(),
                 planner,
                 components,
-                TransformBundle::from(Transform::from_xyz(-200.0, -100.0, 1.0)),
+                Transform::from_xyz(-200.0, -100.0, 1.0),
             ))
             .with_children(|subcommands| {
                 subcommands.spawn((
-                    Text2dBundle {
-                        transform: Transform::from_translation(Vec3::new(-70.0, 0.0, 10.0)),
-                        text: Text::from_section(
-                            "",
-                            TextStyle {
-                                font_size: 12.0,
-                                ..default()
-                            },
-                        )
-                        .with_justify(JustifyText::Left),
-                        text_anchor: bevy::sprite::Anchor::TopLeft,
+                    Text2d::new(""),
+                    Transform::from_translation(Vec3::new(-70.0, 0.0, 10.0)),                        
+                    TextFont {
+                        font_size: 12.0,
                         ..default()
                     },
+                    TextLayout::new_with_justify(JustifyText::Left),
+                    Anchor::TopLeft,
                     StateDebugText,
                 ));
             });
@@ -354,23 +349,18 @@ fn setup(mut commands: Commands) {
                 Worker,
                 planner,
                 components,
-                TransformBundle::from(Transform::from_xyz(0.0, 0.0, 1.0)),
+                Transform::from_xyz(0.0, 0.0, 1.0),
             ))
             .with_children(|subcommands| {
                 subcommands.spawn((
-                    Text2dBundle {
-                        transform: Transform::from_translation(Vec3::new(10.0, -10.0, 10.0)),
-                        text: Text::from_section(
-                            "",
-                            TextStyle {
-                                font_size: 12.0,
-                                ..default()
-                            },
-                        )
-                        .with_justify(JustifyText::Left),
-                        text_anchor: bevy::sprite::Anchor::TopLeft,
+                    Text2d::new(""),
+                    Transform::from_translation(Vec3::new(10.0, -10.0, 10.0)),
+                    TextFont {
+                        font_size: 12.0,
                         ..default()
                     },
+                    TextLayout::new_with_justify(JustifyText::Left),
+                    Anchor::TopLeft,
                     StateDebugText,
                 ));
             });
@@ -380,23 +370,18 @@ fn setup(mut commands: Commands) {
         .spawn((
             Name::new("Lemonade Maker"),
             LemonadeMaker,
-            TransformBundle::from(Transform::from_xyz(100.0, 0.0, 1.0)),
+            Transform::from_xyz(100.0, 0.0, 1.0),
         ))
         .with_children(|subcommands| {
             subcommands.spawn((
-                Text2dBundle {
-                    transform: Transform::from_translation(Vec3::new(0.0, 25.0, 10.0)),
-                    text: Text::from_section(
-                        "Lemonade Maker",
-                        TextStyle {
-                            font_size: 12.0,
-                            ..default()
-                        },
-                    )
-                    .with_justify(JustifyText::Left),
-                    text_anchor: bevy::sprite::Anchor::TopLeft,
+                Text2d::new("Lemonade Maker"),
+                Transform::from_translation(Vec3::new(0.0, 25.0, 10.0)),
+                TextFont {
+                    font_size: 12.0,
                     ..default()
                 },
+                TextLayout::new_with_justify(JustifyText::Left),
+                Anchor::TopLeft,
                 StateDebugText,
             ));
         });
@@ -405,28 +390,23 @@ fn setup(mut commands: Commands) {
         .spawn((
             Name::new("Order Desk"),
             OrderDesk::default(),
-            TransformBundle::from(Transform::from_xyz(-100.0, 0.0, 1.0)),
+            Transform::from_xyz(-100.0, 0.0, 1.0),
         ))
         .with_children(|subcommands| {
             subcommands.spawn((
-                Text2dBundle {
-                    transform: Transform::from_translation(Vec3::new(0.0, 50.0, 10.0)),
-                    text: Text::from_section(
-                        "Order Desk",
-                        TextStyle {
-                            font_size: 12.0,
-                            ..default()
-                        },
-                    )
-                    .with_justify(JustifyText::Left),
-                    text_anchor: bevy::sprite::Anchor::TopLeft,
+                Text2d::new("Order Desk"),
+                TextFont {
+                    font_size: 12.0,
                     ..default()
                 },
+                TextLayout::new_with_justify(JustifyText::Left),
+                Transform::from_translation(Vec3::new(0.0, 50.0, 10.0)),
+                Anchor::TopLeft,
                 StateDebugText,
             ));
         });
 
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
 }
 
 fn handle_call_worker_to_empty_order_desk(
@@ -459,7 +439,7 @@ fn handle_move_to(
         if transform.translation.distance(destination) > 5.0 {
             // If we're further away than 5 units, move closer
             let direction = (destination - transform.translation).normalize();
-            transform.translation += direction * 96.0 * time.delta_seconds();
+            transform.translation += direction * 96.0 * time.delta_secs();
         } else {
             // If we're within 5 units, assume the MoveTo completed
             commands.entity(entity).remove::<MoveTo>();
@@ -666,7 +646,7 @@ fn handle_drink_lemonade(
 
 fn update_thirst(time: Res<Time>, mut query: Query<&mut Thirst>) {
     for mut thirst in query.iter_mut() {
-        thirst.0 += time.delta_seconds_f64() * 0.3;
+        thirst.0 += time.delta_secs_f64() * 0.3;
         if thirst.0 > 100.0 {
             thirst.0 = 100.0;
         }
@@ -677,7 +657,7 @@ fn draw_state_debug(
     q_planners: Query<(Entity, &Name, &Children), With<Planner>>,
     q_actions: Query<(Entity, &dyn ActionComponent)>,
     q_datums: Query<(Entity, &dyn DatumComponent)>,
-    mut q_child: Query<&mut Text, With<StateDebugText>>,
+    mut writer: Text2dWriter,
 ) {
     for (entity, name, children) in q_planners.iter() {
         let mut current_action = "Idle";
@@ -710,8 +690,7 @@ fn draw_state_debug(
 
         // Render it out
         for &child in children.iter() {
-            let mut text = q_child.get_mut(child).unwrap();
-            text.sections[0].value =
+            *writer.text(child, 0) =
                 format!("{name}\n{current_action}\nEntity: {entity}\n---\n{state}");
         }
     }
@@ -727,7 +706,6 @@ fn draw_ui(
     gizmos
         .grid_2d(
             Vec2::ZERO,
-            0.0,
             UVec2::new(16, 9),
             Vec2::new(80., 80.),
             // Dark gray
@@ -744,13 +722,12 @@ fn draw_ui(
     }
 
     for transform in q_lemonade_makers.iter() {
-        gizmos.rect_2d(transform.translation.xy(), 0.0, Vec2::new(20.0, 20.0), GOLD);
+        gizmos.rect_2d(transform.translation.xy(), Vec2::new(20.0, 20.0), GOLD);
     }
 
     for transform in q_order_desks.iter() {
         gizmos.rect_2d(
             transform.translation.xy(),
-            0.0,
             Vec2::new(40.0, 40.0),
             BLUE_VIOLET,
         );
