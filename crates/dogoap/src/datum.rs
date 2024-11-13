@@ -3,7 +3,6 @@ use std::hash::Hash;
 use std::ops::{Add, AddAssign, Sub, SubAssign};
 
 use bevy_reflect::Reflect;
-use bevy_ecs::entity::Entity;
 
 /// Represents one value of either `bool`, `i64`, `f64` or a `Enum` as `usize`.
 #[derive(Reflect, Clone, Debug, PartialOrd, Copy)]
@@ -173,7 +172,6 @@ impl SubAssign for Datum {
 
 #[cfg(test)]
 mod test {
-    use bevy_ecs::entity::Entity;
 
     use crate::prelude::*;
     #[test]
