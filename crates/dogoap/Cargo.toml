@@ -8,5 +8,6 @@ homepage = "https://github.com/victorb/dogoap"
 
 [dependencies]
 bevy_reflect = "0.15.0-rc.2"
+bevy_ecs = "0.15.0-rc.2"
 log = "0.4.22"
 pathfinding = "4.10.0"
