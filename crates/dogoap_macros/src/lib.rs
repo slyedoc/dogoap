@@ -46,6 +46,7 @@ pub fn datum_component_derive(input: TokenStream) -> TokenStream {
                         "f64" => quote! { Datum::F64 },
                         "usize" => quote! { Datum::Enum },
                         "i64" => quote! { Datum::I64 },
+                        "Entity" => quote! { Datum::Entity },
                         _ => panic!("Unsupported type for DatumComponent"),
                     };
                     (ty, variant)
