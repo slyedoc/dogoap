@@ -19,6 +19,9 @@ use bevy_dogoap::prelude::*;
 struct IsHungry(bool);
 
 #[derive(Component, Clone, DatumComponent)]
+struct Target(Entity);
+
+#[derive(Component, Clone, DatumComponent)]
 struct IsTired(bool);
 
 // This is our ActionComponent that gets added whenever the planner thinks
@@ -31,7 +34,7 @@ struct SleepAction;
 
 fn startup(mut commands: Commands) {
     // This is the goal we want the planner to help us reach
-    let goal = Goal::from_reqs(&[IsHungry::is(false), IsTired::is(false)]);
+    let goal = Goal::from_reqs(&[IsHungry::is(false), Target::is(Entity::PLACEHOLDER), IsTired::is(false)]);
 
     // Our first action, the eat action, that sets is_hungry to false
     // but requires is_tired to be set to false first

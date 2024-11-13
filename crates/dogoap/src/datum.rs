@@ -12,7 +12,6 @@ pub enum Datum {
     I64(i64),
     F64(f64),
     Enum(usize),
-    Entity(Entity),
 }
 
 impl Hash for Datum {
@@ -23,7 +22,6 @@ impl Hash for Datum {
             Datum::I64(i) => i.hash(state),
             Datum::F64(f) => f.to_bits().hash(state),
             Datum::Enum(u) => u.hash(state),
-            Datum::Entity(e) => e.hash(state),
         }
     }
 }
@@ -35,7 +33,6 @@ impl PartialEq for Datum {
             (Self::I64(l0), Self::I64(r0)) => l0 == r0,
             (Self::F64(l0), Self::F64(r0)) => l0 == r0,
             (Self::Enum(l0), Self::Enum(r0)) => l0 == r0,
-            (Self::Entity(l0), Self::Entity(r0)) => l0 == r0,
             _ => false,
         }
     }
@@ -81,9 +78,6 @@ impl Display for Datum {
             }
             Self::Enum(v) => {
                 write!(f, "Datum:Enum({})", v)
-            }
-            Self::Entity(v) => {
-                write!(f, "Datum:Entity({})", v)
             }
         }
     }
@@ -187,7 +181,6 @@ mod test {
         assert_eq!(Datum::Bool(true), Datum::Bool(true));
         assert_eq!(Datum::I64(666), Datum::I64(666));
         assert_eq!(Datum::F64(666.666), Datum::F64(666.666));
-        assert_eq!(Datum::Entity(Entity::PLACEHOLDER), Datum::Entity(Entity::PLACEHOLDER));
     }
 
     #[test]

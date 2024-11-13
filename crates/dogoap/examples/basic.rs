@@ -1,3 +1,4 @@
+use bevy_ecs::entity::Entity;
 use dogoap::prelude::*;
 
 // This example shows the most basic use of dogoap
@@ -5,7 +6,8 @@ use dogoap::prelude::*;
 // but shows the data structures needed for the planner
 
 fn main() {
-    let start = LocalState::new().with_datum("is_hungry", Datum::Bool(true));
+    let start = LocalState::new().with_datum("is_hungry", Datum::Bool(true))
+    .with_datum("target", Datum::Entity(Entity::PLACEHOLDER));
 
     let goal = Goal::new().with_req("is_hungry", Compare::Equals(Datum::Bool(false)));
 
