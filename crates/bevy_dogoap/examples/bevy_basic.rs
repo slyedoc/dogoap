@@ -19,9 +19,6 @@ use bevy_dogoap::prelude::*;
 struct IsHungry(bool);
 
 #[derive(Component, Clone, DatumComponent)]
-struct Target(Entity);
-
-#[derive(Component, Clone, DatumComponent)]
 struct IsTired(bool);
 
 // This is our ActionComponent that gets added whenever the planner thinks
