@@ -386,7 +386,7 @@ dependencies = [
 [[package]]
 name = "bevy-trait-query"
 version = "0.19.0"
-source = "git+https://github.com/slyedoc/bevy-trait-query?branch=bevy-main#54aab48a4817b08e3af18d728bba40a5321beff3"
+source = "git+https://github.com/slyedoc/bevy-trait-query?branch=aurora#b7c74de099061d60a37d210df1730a8f68c708bf"
 dependencies = [
  "bevy-trait-query-impl",
  "bevy_app",
@@ -396,7 +396,7 @@ dependencies = [
 [[package]]
 name = "bevy-trait-query-impl"
 version = "0.19.0"
-source = "git+https://github.com/slyedoc/bevy-trait-query?branch=bevy-main#54aab48a4817b08e3af18d728bba40a5321beff3"
+source = "git+https://github.com/slyedoc/bevy-trait-query?branch=aurora#b7c74de099061d60a37d210df1730a8f68c708bf"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
