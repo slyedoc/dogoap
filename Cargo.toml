@@ -29,13 +29,16 @@ panic = "abort"
 dogoap = { path = "crates/dogoap", version = "0.6.0" }
 dogoap_macros = { path = "crates/dogoap_macros", version = "0.6.0" }
 
-bevy_ecs = { version = "0.17", default-features = false }
-bevy_app = { version = "0.17", default-features = false }
-bevy_log = { version = "0.17", default-features = false }
-bevy_reflect = { version = "0.17", default-features = false }
-bevy_platform = { version = "0.17", default-features = false }
-bevy_tasks = { version = "0.17", default-features = false }
-bevy-trait-query = { version = "0.17.1" }
+# bevy-main port: deps ride upstream bevy git so consumers can [patch] the
+# whole graph onto one bevy; the patch below builds this workspace standalone
+# against the same slyedoc/bevy branch zero/bevy_aurora use.
+bevy_ecs = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy_app = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy_log = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy_reflect = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy_platform = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy_tasks = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = false }
+bevy-trait-query = { git = "https://github.com/slyedoc/bevy-trait-query", branch = "bevy-main" }
 
 rand = "0.9.2"
 pathfinding = "4.14.0"
@@ -46,7 +49,16 @@ criterion = { version = "0.5", features = ["html_reports"] }
 crossbeam-channel = "0.5"
 
 # for running examples
-bevy = { version = "0.17.2", default-features = true, features = ["track_location"] }
+bevy = { git = "https://github.com/bevyengine/bevy", branch = "main", default-features = true, features = ["track_location"] }
+
+[patch."https://github.com/bevyengine/bevy"]
+bevy = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_app = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_ecs = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_log = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_reflect = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_platform = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
+bevy_tasks = { git = "https://github.com/slyedoc/bevy.git", branch = "aurora" }
 
 [workspace.lints.rust]
 missing_docs = "warn"

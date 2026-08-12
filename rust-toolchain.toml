@@ -1,2 +1,4 @@
+# Nightly for edition 2024; plain nightly tracks the zero/bevy_aurora stack
+# (the old 2025-10-31 pin predates the stacked bevy's rustc 1.95 floor).
 [toolchain]
-channel = "nightly-2025-10-31"
+channel = "nightly"
