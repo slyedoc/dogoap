@@ -17,6 +17,7 @@ use std::collections::BTreeMap;
 use crate::datum::Datum;
 use crate::goal::Goal;
 
+/// A state's facts by name, which is what [`LocalState`] is a wrapper over.
 pub type InternalData = BTreeMap<String, Datum>;
 
 /// This is our internal state that the planner uses to progress in the path finding,

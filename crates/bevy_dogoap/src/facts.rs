@@ -30,6 +30,7 @@ use dogoap::prelude::{Datum, InternalData};
 pub struct Facts(pub InternalData);
 
 impl Facts {
+    /// No facts at all: a world's content fills them in.
     pub fn new() -> Self {
         Self(InternalData::new())
     }
@@ -41,10 +42,12 @@ impl Facts {
         self
     }
 
+    /// What a fact holds, or `None` where nothing has set it.
     pub fn get(&self, key: &str) -> Option<Datum> {
         self.0.get(key).copied()
     }
 
+    /// Write a fact, whatever it held before.
     pub fn set(&mut self, key: impl Into<String>, value: impl Into<Datum>) {
         self.0.insert(key.into(), value.into());
     }
@@ -64,6 +67,7 @@ impl Facts {
         now
     }
 
+    /// Every fact's name, in order.
     pub fn keys(&self) -> impl Iterator<Item = &String> {
         self.0.keys()
     }
