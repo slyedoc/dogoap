@@ -73,13 +73,14 @@ fn successors<'a>(
 
 fn is_goal(node: &Node, goal: &Goal) -> bool {
     goal.requirements.iter().all(|(key, value)| {
-        let state_val = node.state().data.get(key).unwrap_or_else(|| {
-            panic!(
-                "Couldn't find key {key:#?} in LocalState {:#?}",
-                node.state().data
-            )
-        });
-        compare_values(value, state_val)
+        // A requirement naming a fact the state has never held is simply not met yet, which is
+        // what [`LocalState::distance_to_goal`] already assumes. Panicking here instead took the
+        // planning task's thread down with it, and the planner reported "task channel
+        // disconnected" from a different system a frame later.
+        node.state()
+            .data
+            .get(key)
+            .is_some_and(|held| compare_values(value, held))
     })
 }
 

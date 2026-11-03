@@ -86,11 +86,14 @@ pub fn compare_values(comparison: &Compare, value: &Datum) -> bool {
 /// Returns `true` if all the preconditions pass (or if there is none), otherwise `false`
 pub fn check_preconditions(state: &LocalState, action: &Action) -> bool {
     action.preconditions.iter().all(|(key, value)| {
-        let state_value = state
+        // A precondition on a fact the state has never held cannot be met, the same way
+        // [`LocalState::distance_to_goal`] counts a missing key as distance rather than as
+        // nothing. Panicking here took the planning task's whole thread down, which surfaced as
+        // "task channel disconnected" from a different system a frame later.
+        state
             .data
             .get(key)
-            .unwrap_or_else(|| panic!("Couldn't find key {key:#?} in LocalState"));
-        compare_values(value, state_value)
+            .is_some_and(|held| compare_values(value, held))
     })
 }
 
