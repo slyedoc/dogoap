@@ -5,6 +5,8 @@ pub use bevy_trait_query::RegisterExt;
 
 pub use dogoap::prelude::{Action, Compare, Datum, Goal, LocalState, Mutator};
 
+pub use crate::facts::Facts;
+
 pub use crate::{
     create_planner,
     planner::IsPlanning,

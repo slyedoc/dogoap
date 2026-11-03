@@ -65,6 +65,11 @@ pub(crate) struct PlanReceiver(Receiver<Option<Plan>>);
 pub struct IsPlanning;
 
 impl Planner {
+    /// Creates a new [`Planner`] whose state is the entity's [`Facts`](crate::prelude::Facts).
+    pub fn from_facts(goals: Vec<Goal>, actions_map: ActionsMap) -> Self {
+        Self::new(DatumComponents::new(), goals, actions_map)
+    }
+
     /// Creates a new [`Planner`] from the given components, goals, and actions map.
     pub fn new(components: DatumComponents, goals: Vec<Goal>, actions_map: ActionsMap) -> Self {
         let mut actions_for_dogoap: Vec<Action> = vec![];
@@ -92,18 +97,36 @@ impl Planner {
     }
 }
 
-/// This system "syncs" our [`DatumComponent`]s with the `LocalState` in the [`Planner`]
+/// This system "syncs" the world's facts with the `LocalState` in the [`Planner`], from whichever
+/// shape the entity keeps them in: a [`Facts`](crate::prelude::Facts) map, a
+/// [`DatumComponent`] per fact, or both.
 pub(crate) fn update_planner_local_state(
     local_field_components: Query<&dyn DatumComponent>,
+    facts: Query<&Facts>,
     mut q_planner: Query<(Entity, &mut Planner)>,
 ) -> Result {
     for (entity, mut planner) in q_planner.iter_mut() {
-        let components = local_field_components.get(entity).map_err(|_| "Didn't find any DatumComponents, make sure you called register_components with all Components you want to use with the planner")?;
-        for component in components {
+        let mut told = false;
+        if let Ok(components) = local_field_components.get(entity) {
+            for component in components {
+                planner
+                    .state
+                    .data
+                    .insert(component.field_key(), component.field_value());
+                told = true;
+            }
+        }
+        if let Ok(facts) = facts.get(entity) {
             planner
                 .state
                 .data
-                .insert(component.field_key(), component.field_value());
+                .extend(facts.0.iter().map(|(key, datum)| (key.clone(), *datum)));
+            told = true;
+        }
+        if !told {
+            return Err(BevyError::from(
+                "A planner was told no facts: give its entity a `Facts`, or a `DatumComponent` per fact registered with `register_components`",
+            ));
         }
     }
     Ok(())

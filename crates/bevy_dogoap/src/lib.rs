@@ -2,6 +2,7 @@
 
 extern crate alloc;
 
+pub mod facts;
 pub mod macros;
 pub mod planner;
 pub mod plugin;
