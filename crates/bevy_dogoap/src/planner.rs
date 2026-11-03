@@ -66,8 +66,14 @@ pub struct IsPlanning;
 
 impl Planner {
     /// Creates a new [`Planner`] whose state is the entity's [`Facts`](crate::prelude::Facts).
-    pub fn from_facts(goals: Vec<Goal>, actions_map: ActionsMap) -> Self {
-        Self::new(DatumComponents::new(), goals, actions_map)
+    ///
+    /// The facts are copied in here rather than waited for: a planner is often asked for a plan in
+    /// the same frame it is built, and [`update_planner_local_state`] has not run by then, so a
+    /// planner that started empty would plan against nothing.
+    pub fn from_facts(facts: &Facts, goals: Vec<Goal>, actions_map: ActionsMap) -> Self {
+        let mut planner = Self::new(DatumComponents::new(), goals, actions_map);
+        planner.state.data = facts.0.clone();
+        planner
     }
 
     /// Creates a new [`Planner`] from the given components, goals, and actions map.
